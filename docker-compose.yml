@@ -1,0 +1,38 @@
+services:
+    bookguardian:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: bookguardian
+        ports:
+            - "${BOOKGUARDIAN_PORT}:${BOOKGUARDIAN_PORT}"
+        env_file:
+            - .env
+        volumes:
+            - .:/app
+        depends_on:
+            - postgress_bookguardian
+        networks:
+            - project_network
+        restart: always
+
+    postgress_bookguardian:
+        image: postgres:17
+        environment:
+            POSTGRES_DB: ${POSTGRES_DB}
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+        volumes:
+            - postgress_bookguardian_data:/var/lib/postgresql/data
+        ports:
+            - "${POSTGRES_PORT}:5432"
+        networks:
+            - project_network
+        restart: always
+
+volumes:
+    postgress_bookguardian_data:
+
+networks:
+    project_network:
+        external: true

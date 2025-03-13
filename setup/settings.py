@@ -8,16 +8,18 @@ dotenv.load_dotenv(dotenv.find_dotenv())
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-nxjvm_=1vo=io18_+vz1ott6uu2qm(=6f#!#aemnwtwwppt*@e"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False if os.environ.get("DEBUGDB") == "False" else True
+DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() in ["true", "1"]
 
-ALLOWED_HOSTS = ["book-guardian-production.up.railway.app", "127.0.0.1"]
 
+ALLOWED_HOSTS = [os.getenv("host1"), os.getenv("host2"), os.getenv("host3")]
 CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1",
-    "https://book-guardian-production.up.railway.app",
+    f"https://{os.getenv('host1')}",
+    f"https://{os.getenv('host2')}",
+    f"http://{os.getenv('host3')}",
 ]
 
 
@@ -103,12 +105,12 @@ WSGI_APPLICATION = "setup.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": os.environ.get("DATABASE_ENGINE"),
-        "NAME": os.environ.get("PGDATABASE"),
-        "USER": os.environ.get("PGUSER"),
-        "PASSWORD": os.environ.get("PGPASSWORD"),
-        "HOST": os.environ.get("PGHOST"),
-        "PORT": os.environ.get("PGPORT"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB"),
+        "USER": os.getenv("POSTGRES_USER"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+        "HOST": os.getenv("POSTGRES_HOST"),
+        "PORT": os.getenv("POSTGRES_PORT"),
     }
 }
 
